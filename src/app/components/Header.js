@@ -15,47 +15,99 @@ import {
   List,
   ListItem,
   ListItemText,
+  Collapse,
+  Menu,
+  MenuItem,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const navItems = [
   { label: 'Anasayfa', href: '/' },
   { label: 'Döviz', href: '/currency' },
-  { label: 'Altın', href: '/gold' },
+  {
+    label: 'Altın',
+    subItems: [
+      { label: 'Altın Fiyatları', href: '/gold' },
+      { label: 'Diğer Emtia', href: '' },
+    ],
+  },
+  {
+    label: 'Borsa',
+    subItems: [
+      { label: 'Hisse Senedi', href: '/hisseSenedi' },
+      { label: 'Borsa İstanbul', href: '/borsaIstanbul' },
+    ],
+  },
   { label: 'Kripto', href: '/crypto' },
-  { label: 'Hisse Senedi', href: '/hisseSenedi' },
-  { label: 'Borsa İstanbul', href: '/borsaIstanbul' },
 ];
 
 export default function Header() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const theme = useTheme(); // 🎯
+  const [mobileMenuOpen, setMobileMenuOpen] = useState({});
+  const [anchorEl, setAnchorEl] = useState({});
+  const theme = useTheme();
 
-  const toggleDrawer = () => {
-    setMobileOpen((prev) => !prev);
+  const toggleDrawer = () => setMobileOpen((prev) => !prev);
+
+  const handleMobileToggle = (label) => {
+    setMobileMenuOpen((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
   };
 
   const drawer = (
-    <Box onClick={toggleDrawer} sx={{ textAlign: 'center' }}>
+    <Box sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
         Currencyhub
       </Typography>
       <List>
-        {navItems.map(({ label, href }) => (
-          <ListItem
-            key={href}
-            component={Link}
-            href={href}
-            sx={{
-              justifyContent: 'center',
-              color: pathname === href ? theme.palette.secondary.main : 'inherit',
-              fontWeight: pathname === href ? 700 : 400,
-            }}
-          >
-            <ListItemText primary={label} />
-          </ListItem>
-        ))}
+        {navItems.map(({ label, href, subItems }) =>
+          subItems ? (
+            <Box key={label}>
+              <ListItem
+                button
+                onClick={() => handleMobileToggle(label)}
+                sx={{ justifyContent: 'space-between', px: 3 }}
+              >
+                <ListItemText primary={label} />
+                {mobileMenuOpen[label] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+              </ListItem>
+              <Collapse in={mobileMenuOpen[label]} timeout="auto" unmountOnExit>
+                <List component="div" disablePadding>
+                  {subItems.map((item) => (
+                    <ListItem
+                      key={item.href}
+                      component={Link}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      sx={{ pl: 6 }}
+                    >
+                      <ListItemText primary={item.label} />
+                    </ListItem>
+                  ))}
+                </List>
+              </Collapse>
+            </Box>
+          ) : (
+            <ListItem
+              key={href}
+              component={Link}
+              href={href}
+              onClick={() => setMobileOpen(false)}
+              sx={{
+                justifyContent: 'center',
+                color: pathname === href ? theme.palette.secondary.main : 'inherit',
+                fontWeight: pathname === href ? 700 : 400,
+              }}
+            >
+              <ListItemText primary={label} />
+            </ListItem>
+          )
+        )}
       </List>
     </Box>
   );
@@ -64,38 +116,71 @@ export default function Header() {
     <>
       <AppBar position="sticky" color="primary" component="nav">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          {/* Logo */}
           <Typography
             variant="h6"
             component={Link}
             href="/"
-            sx={{
-              textDecoration: 'none',
-              color: 'inherit',
-              fontWeight: 600,
-            }}
+            sx={{ textDecoration: 'none', color: 'inherit', fontWeight: 600 }}
           >
             Currencyhub
           </Typography>
 
-          {/* Masaüstü menü */}
-          <Box sx={{ display: { xs: 'none', md: 'block' } }}>
-            {navItems.map(({ label, href }) => (
-              <Button
-                key={href}
-                component={Link}
-                href={href}
-                sx={{
-                  color: pathname === href ? theme.palette.secondary.main : 'white',
-                  fontWeight: pathname === href ? 700 : 400,
-                }}
-              >
-                {label}
-              </Button>
-            ))}
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+            {navItems.map(({ label, href, subItems }) => {
+              const open = Boolean(anchorEl[label]);
+              return subItems ? (
+                <Box key={label}>
+                  <Button
+                    onClick={(e) =>
+                      setAnchorEl((prev) => ({
+                        ...prev,
+                        [label]: open ? null : e.currentTarget,
+                      }))
+                    }
+                    sx={{
+                      color: pathname.startsWith(href) ? theme.palette.secondary.main : 'white',
+                      fontWeight: pathname.startsWith(href) ? 700 : 400,
+                    }}
+                    endIcon={open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                  >
+                    {label}
+                  </Button>
+                  <Menu
+                    anchorEl={anchorEl[label]}
+                    open={open}
+                    onClose={() => setAnchorEl((prev) => ({ ...prev, [label]: null }))}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                  >
+                    {subItems.map((item) => (
+                      <MenuItem
+                        key={item.href}
+                        component={Link}
+                        href={item.href}
+                        onClick={() => setAnchorEl((prev) => ({ ...prev, [label]: null }))}
+                        selected={pathname === item.href}
+                      >
+                        {item.label}
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </Box>
+              ) : (
+                <Button
+                  key={href}
+                  component={Link}
+                  href={href}
+                  sx={{
+                    color: pathname === href ? theme.palette.secondary.main : 'white',
+                    fontWeight: pathname === href ? 700 : 400,
+                  }}
+                >
+                  {label}
+                </Button>
+              );
+            })}
           </Box>
 
-          {/* Mobil menü ikonu */}
           <IconButton
             color="inherit"
             edge="start"
@@ -107,12 +192,11 @@ export default function Header() {
         </Toolbar>
       </AppBar>
 
-      {/* Mobilde Drawer */}
       <Drawer
         anchor="left"
         open={mobileOpen}
         onClose={toggleDrawer}
-        ModalProps={{ keepMounted: true }} // mobile performance
+        ModalProps={{ keepMounted: true }}
         sx={{
           display: { xs: 'block', md: 'none' },
           '& .MuiDrawer-paper': { width: 240 },
