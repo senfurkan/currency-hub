@@ -32,7 +32,7 @@ export default function CurrencyTable({ title, data, loading }) {
           <TableBody>
             {loading
               ? Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} index={5}/>)
-              : data.map((item) => <EconomyTableRow key={item.code} item={item} />)}
+              : data.map((item) => <EconomyTableRow key={item.code ? item.code : item.name} item={item} />)}
           </TableBody>
         </Table>
       </TableContainer>
