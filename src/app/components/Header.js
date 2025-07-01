@@ -30,7 +30,7 @@ const navItems = [
     label: 'Altın',
     subItems: [
       { label: 'Altın Fiyatları', href: '/gold' },
-      { label: 'Diğer Emtia', href: '' },
+      { label: 'Diğer Emtia', href: '/emtia' },
     ],
   },
   {
