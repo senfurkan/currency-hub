@@ -24,7 +24,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const navItems = [
-  { label: 'Anasayfa', href: '/' },
   { label: 'Döviz', href: '/currency' },
   {
     label: 'Altın',
@@ -41,7 +40,6 @@ const navItems = [
     ],
   },
   { label: 'Kripto', href: '/crypto' },
-  { label: 'Dönüştür', href: '/exchange' },
 ];
 
 export default function Header() {
@@ -66,7 +64,7 @@ export default function Header() {
         Currencyhub
       </Typography>
       <List>
-        {navItems.map(({ label, href, subItems }) =>
+        {[...navItems, { label: 'Dönüştür', href: '/exchange', isAction: true }].map(({ label, href, subItems, isAction }) =>
           subItems ? (
             <Box key={label}>
               <ListItem
@@ -101,7 +99,8 @@ export default function Header() {
               onClick={() => setMobileOpen(false)}
               sx={{
                 justifyContent: 'center',
-                color: pathname === href ? theme.palette.secondary.main : 'inherit',
+                bgcolor: isAction ? theme.palette.secondary.main : 'inherit',
+                color: pathname === href ? theme.palette.secondary.contrastText : 'inherit',
                 fontWeight: pathname === href ? 700 : 400,
               }}
             >
@@ -126,7 +125,7 @@ export default function Header() {
             Currencyhub
           </Typography>
 
-          <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', gap: 2 }}>
             {navItems.map(({ label, href, subItems }) => {
               const open = Boolean(anchorEl[label]);
               return subItems ? (
@@ -181,6 +180,16 @@ export default function Header() {
               );
             })}
           </Box>
+
+          <Button
+            component={Link}
+            href="/exchange"
+            variant="contained"
+            color="secondary"
+            sx={{ display: { xs: 'none', md: 'block' } }}
+          >
+            Dönüştür
+          </Button>
 
           <IconButton
             color="inherit"
