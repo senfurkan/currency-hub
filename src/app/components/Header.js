@@ -41,6 +41,7 @@ const navItems = [
     ],
   },
   { label: 'Kripto', href: '/crypto' },
+  { label: 'Dönüştür', href: '/exchange' },
 ];
 
 export default function Header() {

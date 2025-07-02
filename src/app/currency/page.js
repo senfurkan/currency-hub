@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { fetchCurrencyData } from '@/app/lib/fetchCurrency';
-import { Container } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import EconomyTable from '@/app/components/EconomyTable/EconomyTable';
+import CurrencyConverter from '@/app/components/converter/CurrencyConverter';
 
 export default function CurrencyPage() {
   const [data, setData] = useState([]);
@@ -17,8 +18,15 @@ export default function CurrencyPage() {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <EconomyTable title={'Döviz Kuru'} data={data} loading={loading} />
+    <Container maxWidth="lg">
+      <Grid container rowSpacing={4}>
+        <Grid item size={{ xs: 12 }}>
+          <CurrencyConverter />
+        </Grid>
+        <Grid item size={{ xs: 12 }}>
+          <EconomyTable title={'Döviz Kuru'} data={data} loading={loading} />
+        </Grid>
+      </Grid>
     </Container>
   );
 }
