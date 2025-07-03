@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTheme } from '@mui/material/styles';
 import Link from 'next/link';
+import Logo from '@/app/components/Logo';
 import {
   AppBar,
   Toolbar,
@@ -60,53 +61,52 @@ export default function Header() {
 
   const drawer = (
     <Box sx={{ textAlign: 'center' }}>
-      <Typography variant="h6" sx={{ my: 2 }}>
-        Currencyhub
-      </Typography>
+      <Logo />
       <List>
-        {[...navItems, { label: 'Dönüştür', href: '/exchange', isAction: true }].map(({ label, href, subItems, isAction }) =>
-          subItems ? (
-            <Box key={label}>
+        {[...navItems, { label: 'Dönüştür', href: '/exchange', isAction: true }].map(
+          ({ label, href, subItems, isAction }) =>
+            subItems ? (
+              <Box key={label}>
+                <ListItem
+                  button
+                  onClick={() => handleMobileToggle(label)}
+                  sx={{ justifyContent: 'space-between', px: 3 }}
+                >
+                  <ListItemText primary={label} />
+                  {mobileMenuOpen[label] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                </ListItem>
+                <Collapse in={mobileMenuOpen[label]} timeout="auto" unmountOnExit>
+                  <List component="div" disablePadding>
+                    {subItems.map((item) => (
+                      <ListItem
+                        key={item.href}
+                        component={Link}
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        sx={{ pl: 6 }}
+                      >
+                        <ListItemText primary={item.label} />
+                      </ListItem>
+                    ))}
+                  </List>
+                </Collapse>
+              </Box>
+            ) : (
               <ListItem
-                button
-                onClick={() => handleMobileToggle(label)}
-                sx={{ justifyContent: 'space-between', px: 3 }}
+                key={href}
+                component={Link}
+                href={href}
+                onClick={() => setMobileOpen(false)}
+                sx={{
+                  justifyContent: 'center',
+                  bgcolor: isAction ? theme.palette.secondary.main : 'inherit',
+                  color: pathname === href ? theme.palette.secondary.contrastText : 'inherit',
+                  fontWeight: pathname === href ? 700 : 400,
+                }}
               >
                 <ListItemText primary={label} />
-                {mobileMenuOpen[label] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
               </ListItem>
-              <Collapse in={mobileMenuOpen[label]} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                  {subItems.map((item) => (
-                    <ListItem
-                      key={item.href}
-                      component={Link}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      sx={{ pl: 6 }}
-                    >
-                      <ListItemText primary={item.label} />
-                    </ListItem>
-                  ))}
-                </List>
-              </Collapse>
-            </Box>
-          ) : (
-            <ListItem
-              key={href}
-              component={Link}
-              href={href}
-              onClick={() => setMobileOpen(false)}
-              sx={{
-                justifyContent: 'center',
-                bgcolor: isAction ? theme.palette.secondary.main : 'inherit',
-                color: pathname === href ? theme.palette.secondary.contrastText : 'inherit',
-                fontWeight: pathname === href ? 700 : 400,
-              }}
-            >
-              <ListItemText primary={label} />
-            </ListItem>
-          )
+            )
         )}
       </List>
     </Box>
@@ -116,16 +116,16 @@ export default function Header() {
     <>
       <AppBar position="sticky" color="primary" component="nav">
         <Toolbar sx={{ justifyContent: 'space-between' }}>
-          <Typography
-            variant="h6"
-            component={Link}
-            href="/"
-            sx={{ textDecoration: 'none', color: 'inherit', fontWeight: 600 }}
-          >
-            Currencyhub
-          </Typography>
+          <Logo />
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, justifyContent: 'center', gap: 2 }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'center',
+              gap: 2,
+            }}
+          >
             {navItems.map(({ label, href, subItems }) => {
               const open = Boolean(anchorEl[label]);
               return subItems ? (
