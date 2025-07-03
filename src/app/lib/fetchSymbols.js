@@ -1,8 +1,8 @@
-import axiosInstance from './axiosInstance';
+import axios from 'axios';
 
 export async function fetchSymbolsData() {
   try {
-    const response = await axiosInstance.get('symbols');
+    const response = await axios.get('api/symbols');
     return response;
   } catch (error) {
     console.error('Sembol verileri alınamadı:', error);
