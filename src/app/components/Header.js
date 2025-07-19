@@ -23,6 +23,8 @@ import {
 import MenuIcon from '@mui/icons-material/Menu';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
 
 const navItems = [
   { label: 'Döviz', href: '/currency' },
@@ -43,7 +45,7 @@ const navItems = [
   { label: 'Kripto', href: '/crypto' },
 ];
 
-export default function Header() {
+export default function Header({ darkMode, toggleDarkMode }) {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState({});
@@ -181,6 +183,30 @@ export default function Header() {
             })}
           </Box>
 
+          <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 1 }}>
+            <IconButton onClick={toggleDarkMode} color="inherit">
+              {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+
+            <Button component={Link} href="/exchange" variant="contained" color="secondary">
+              Dönüştür
+            </Button>
+          </Box>
+
+          <Box sx={{ display: { xs: 'flex', md: 'none' }, alignItems: 'center', gap: 1 }}>
+            <IconButton onClick={toggleDarkMode} color="inherit">
+              {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+            </IconButton>
+
+            <IconButton color="inherit" edge="start" onClick={toggleDrawer}>
+              <MenuIcon />
+            </IconButton>
+          </Box>
+
+          {/* <IconButton onClick={toggleDarkMode} color="inherit">
+            {darkMode ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
+
           <Button
             component={Link}
             href="/exchange"
@@ -198,7 +224,7 @@ export default function Header() {
             sx={{ display: { xs: 'block', md: 'none' } }}
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
         </Toolbar>
       </AppBar>
 
