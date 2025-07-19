@@ -2,7 +2,12 @@ import { TableRow, TableCell, Avatar } from '@mui/material';
 
 export default function BorsaIstanbulTableRow({ item }) {
   return (
-    <TableRow sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' } }}>
+    <TableRow sx={(theme) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor:
+        theme.palette.mode === 'dark' ? '#1e1e1e' : '#f9f9f9',
+    },
+  })}>
       <TableCell>{item.date}</TableCell>
       <TableCell>{item.time}</TableCell>
       <TableCell>{item.opening}</TableCell>

@@ -2,7 +2,12 @@ import { TableRow, TableCell, Avatar } from '@mui/material';
 
 export default function HisseSenediTableRow({ item }) {
   return (
-    <TableRow sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' } }}>
+    <TableRow sx={(theme) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor:
+        theme.palette.mode === 'dark' ? '#1e1e1e' : '#f9f9f9',
+    },
+  })}>
       <TableCell>
         <Avatar alt={item.text} src={item.icon} />
       </TableCell>

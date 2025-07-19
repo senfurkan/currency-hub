@@ -2,7 +2,13 @@ import { TableRow, TableCell } from '@mui/material';
 
 export default function CurrencyTableRow({ item }) {
   return (
-    <TableRow sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' } }}>
+    <TableRow
+      sx={(theme) => ({
+        '&:nth-of-type(odd)': {
+          backgroundColor: theme.palette.mode === 'dark' ? '#1e1e1e' : '#f9f9f9',
+        },
+      })}
+    >
       <TableCell>{item.name}</TableCell>
       <TableCell align="right">{item.buyingstr}</TableCell>
       <TableCell align="right">{item.sellingstr}</TableCell>
