@@ -19,7 +19,7 @@ export interface IExchangeResponse {
 }
 
 
-export async function fetchExchangeData(int, to, base) {
+export async function fetchExchangeData(int: string | number, to: string, base: string) {
   try {
     const response = await axios.get(`api/exchange?int=${int}&to=${to}&base=${base}`);
     return response;

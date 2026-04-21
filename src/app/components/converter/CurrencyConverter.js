@@ -35,7 +35,7 @@ export default function CurrencyConverter() {
 
       <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
         <Grid container spacing={2} rowSpacing={1.5} alignItems="center" justifyContent="center">
-          <Grid item size={{ xs: 12, sm: 5.5 }}>
+          <Grid size={{ xs: 12, sm: 5.5 }}>
             <CurrencySelect
               label="Mevcut Döviz Cinsi"
               value={from}
@@ -44,11 +44,11 @@ export default function CurrencyConverter() {
             />
           </Grid>
 
-          <Grid item size={{ xs: 12, sm: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
+          <Grid size={{ xs: 12, sm: 1 }} sx={{ display: 'flex', justifyContent: 'center' }}>
             <SwitchButton onClick={handleSwitch} />
           </Grid>
 
-          <Grid item size={{ xs: 12, sm: 5.5 }}>
+          <Grid size={{ xs: 12, sm: 5.5 }}>
             <CurrencySelect
               label="Çevrilecek Döviz"
               value={to}
@@ -57,7 +57,7 @@ export default function CurrencyConverter() {
             />
           </Grid>
 
-          <Grid item size={{ xs: 12 }}>
+          <Grid size={{ xs: 12 }}>
             <TextField
               label="Tutar"
               type="number"
@@ -76,7 +76,7 @@ export default function CurrencyConverter() {
             />
           </Grid>
 
-          <Grid item size={{ xs: 12 }}>
+          <Grid size={{ xs: 12 }}>
             <ConvertButton
               onClick={handleConvert}
               loading={loading}

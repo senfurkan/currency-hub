@@ -23,7 +23,7 @@ export const useExchangeStore = create<ExchangeState>((set, get) => ({
 
     try {
       const response = await fetchSymbolsData();
-      if (response && response.data) {
+      if (response && !Array.isArray(response) && response.data) {
         set({ symbols: response.data.result });
       }
     } catch (error: any) {
