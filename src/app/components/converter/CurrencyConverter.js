@@ -5,22 +5,17 @@ import { Box, Grid, TextField, Typography, Paper, InputAdornment } from '@mui/ma
 import CurrencySelect from '@/app/components/converter/CurrencySelect';
 import ConvertButton from '@/app/components/converter/ConvertButton';
 import SwitchButton from '@/app/components/converter/SwitchButton';
-import { fetchSymbolsData } from '@/app/lib/fetchSymbols';
-import { fetchExchangeData } from '@/app/lib/fetchExchange';
+import { useExchangeStore } from '@/store/useExchangeStore';
 
 export default function CurrencyConverter() {
+  const { symbols, result, loading, fetchSymbols, fetchExchange, setResult } = useExchangeStore();
   const [amount, setAmount] = useState('');
-  const [symbols, setSymbols] = useState([]);
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchSymbolsData()
-      .then((res) => setSymbols(res.data.result))
-      .catch((err) => console.error('Veri alınırken hata:', err));
-  }, []);
+    fetchSymbols();
+  }, [fetchSymbols]);
 
   const handleSwitch = () => {
     setFrom(to);
@@ -28,12 +23,8 @@ export default function CurrencyConverter() {
     setResult(null);
   };
 
-  const handleConvert = async () => {
-    setLoading(true);
-    fetchExchangeData(amount, to, from)
-      .then((response) => setResult(response.data.result.data[0]))
-      .catch((err) => console.error('Hata 💥', err))
-      .finally(() => setLoading(false));
+  const handleConvert = () => {
+    fetchExchange(amount, to, from);
   };
 
   return (

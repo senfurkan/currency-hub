@@ -1,20 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchHisseSenediData, IHisseSenedi } from '@/app/lib/fetchHisseSenedi';
-import { Container } from '@mui/material';
+import { useEffect } from 'react';
+import { Container, Typography } from '@mui/material';
 import HisseSenedi from '@/app/components/HisseSenediTable/HisseSenediTable';
+import { useHisseSenediStore } from '@/store/useHisseSenediStore';
 
 export default function HisseSenediPage() {
-  const [data, setData] = useState<IHisseSenedi[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, loading, error, fetchHisseSenedi } = useHisseSenediStore();
 
   useEffect(() => {
-    fetchHisseSenediData()
-      .then((response) => setData(response.data.result))
-      .catch((err) => console.error('Veri alınırken hata:', err))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchHisseSenedi();
+  }, [fetchHisseSenedi]);
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Typography color="error">Hata: {error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>

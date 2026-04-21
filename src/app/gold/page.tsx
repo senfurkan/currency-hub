@@ -1,20 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchGoldData, IGold } from '@/app/lib/fetchGold';
-import { Container } from '@mui/material';
+import { useEffect } from 'react';
+import { Container, Typography } from '@mui/material';
 import EconomyTable from '@/app/components/EconomyTable/EconomyTable';
+import { useGoldStore } from '@/store/useGoldStore';
 
 export default function GoldPage() {
-  const [data, setData] = useState<IGold[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, loading, error, fetchGold } = useGoldStore();
 
   useEffect(() => {
-    fetchGoldData()
-      .then((response) => setData(response.data.result))
-      .catch((err) => console.error('Veri alınırken hata:', err))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchGold();
+  }, [fetchGold]);
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Typography color="error">Hata: {error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>

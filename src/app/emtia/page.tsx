@@ -1,20 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchEmtiaData, IEmtia } from '@/app/lib/fetchEmtia';
-import { Container } from '@mui/material';
+import { useEffect } from 'react';
+import { Container, Typography } from '@mui/material';
 import EmtiaTable from '@/app/components/EmtiaTable/EmtiaTable';
+import { useEmtiaStore } from '@/store/useEmtiaStore';
 
 export default function EmtiaPage() {
-  const [data, setData] = useState<IEmtia[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, loading, error, fetchEmtia } = useEmtiaStore();
 
   useEffect(() => {
-    fetchEmtiaData()
-      .then((response) => setData(response.data.result))
-      .catch((err) => console.error('Veri alınırken hata:', err))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchEmtia();
+  }, [fetchEmtia]);
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Typography color="error">Hata: {error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>

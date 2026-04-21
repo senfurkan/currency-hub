@@ -1,20 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchBorsaIstanbulData, IBorsaIstanbul } from '@/app/lib/fetchBorsaIstanbul';
-import { Container } from '@mui/material';
+import { useEffect } from 'react';
+import { Container, Typography } from '@mui/material';
 import BorsaIstanbulTable from '@/app/components/BorsaIstanbulTable/BorsaIstanbulTable';
+import { useBorsaIstanbulStore } from '@/store/useBorsaIstanbulStore';
 
 export default function BorsaIstanbulPage() {
-  const [data, setData] = useState<IBorsaIstanbul[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { data, loading, error, fetchBorsaIstanbul } = useBorsaIstanbulStore();
 
   useEffect(() => {
-    fetchBorsaIstanbulData()
-      .then((response) => setData(response.data.result))
-      .catch((err) => console.error('Veri alınırken hata:', err))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchBorsaIstanbul();
+  }, [fetchBorsaIstanbul]);
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Typography color="error">Hata: {error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>

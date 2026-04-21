@@ -1,20 +1,24 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { fetchCryptoData, ICrypto } from '@/app/lib/fetchCrypto';
-import { Container } from '@mui/material';
+import { useEffect } from 'react';
+import { Container, Typography } from '@mui/material';
 import CryptoTable from '@/app/components/CryptoTable/CryptoTable';
+import { useCryptoStore } from '@/store/useCryptoStore';
 
 export default function CryptoPage() {
-  const [data, setData] = useState<ICrypto[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading, error, fetchCrypto } = useCryptoStore();
 
   useEffect(() => {
-    fetchCryptoData()
-      .then((response) => setData(response.data.result))
-      .catch((err) => console.error('Veri alınırken hata:', err))
-      .finally(() => setLoading(false));
-  }, []);
+    fetchCrypto();
+  }, [fetchCrypto]);
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ mt: 4 }}>
+        <Typography color="error">Hata: {error}</Typography>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
