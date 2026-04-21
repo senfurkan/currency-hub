@@ -15,6 +15,7 @@ import {
   Drawer,
   List,
   ListItem,
+  ListItemButton,
   ListItemText,
   Collapse,
   Menu,
@@ -69,14 +70,13 @@ export default function Header({ darkMode, toggleDarkMode }) {
           ({ label, href, subItems, isAction }) =>
             subItems ? (
               <Box key={label}>
-                <ListItem
-                  button
+                <ListItemButton
                   onClick={() => handleMobileToggle(label)}
                   sx={{ justifyContent: 'space-between', px: 3 }}
                 >
                   <ListItemText primary={label} />
                   {mobileMenuOpen[label] ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-                </ListItem>
+                </ListItemButton>
                 <Collapse in={mobileMenuOpen[label]} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {subItems.map((item) => (
