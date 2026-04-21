@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchCryptoData } from '@/app/lib/fetchCrypto';
+import { fetchGoldData, IGold } from '@/app/lib/fetchGold';
 import { Container } from '@mui/material';
-import CryptoTable from '@/app/components/CryptoTable/CryptoTable';
+import EconomyTable from '@/app/components/EconomyTable/EconomyTable';
 
-export default function CryptoPage() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function GoldPage() {
+  const [data, setData] = useState<IGold[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchCryptoData()
+    fetchGoldData()
       .then((response) => setData(response.data.result))
       .catch((err) => console.error('Veri alınırken hata:', err))
       .finally(() => setLoading(false));
@@ -18,7 +18,7 @@ export default function CryptoPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <CryptoTable title={'Coin'} data={data} loading={loading} />
+      <EconomyTable title={'Altın'} data={data} loading={loading} />
     </Container>
   );
 }

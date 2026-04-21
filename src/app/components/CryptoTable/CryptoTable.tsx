@@ -10,8 +10,15 @@ import {
 } from '@mui/material';
 import CryptoTableRow from '@/app/components/CryptoTable/CryptoTableRow';
 import SkeletonRow from '@/app/components/SkeletonRow';
+import { ICrypto } from '@/app/lib/fetchCrypto';
 
-export default function CryptoTable({ title, data, loading }) {
+interface CryptoTableProps {
+  title: string;
+  data: ICrypto[];
+  loading: boolean;
+}
+
+export default function CryptoTable({ title, data, loading }: CryptoTableProps) {
   return (
     <>
       <Typography variant="h4" gutterBottom>
@@ -34,7 +41,7 @@ export default function CryptoTable({ title, data, loading }) {
           </TableHead>
           <TableBody>
             {loading
-              ? Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} index={8}/>)
+              ? Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} index={8} />)
               : data.map((item) => <CryptoTableRow key={item.code} item={item} />)}
           </TableBody>
         </Table>

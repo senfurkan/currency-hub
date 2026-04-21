@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchBorsaIstanbulData } from '@/app/lib/fetchBorsaIstanbul';
+import { fetchCryptoData, ICrypto } from '@/app/lib/fetchCrypto';
 import { Container } from '@mui/material';
-import BorsaIstanbulTable from '@/app/components/BorsaIstanbulTable/BorsaIstanbulTable';
+import CryptoTable from '@/app/components/CryptoTable/CryptoTable';
 
-export default function BorsaIstanbulPage() {
-  const [data, setData] = useState([]);
+export default function CryptoPage() {
+  const [data, setData] = useState<ICrypto[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchBorsaIstanbulData()
+    fetchCryptoData()
       .then((response) => setData(response.data.result))
       .catch((err) => console.error('Veri alınırken hata:', err))
       .finally(() => setLoading(false));
@@ -18,7 +18,7 @@ export default function BorsaIstanbulPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <BorsaIstanbulTable title={'Borsa İstanbul'} data={data} loading={loading} />
+      <CryptoTable title={'Coin'} data={data} loading={loading} />
     </Container>
   );
 }

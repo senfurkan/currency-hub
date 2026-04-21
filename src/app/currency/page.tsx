@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchCurrencyData } from '@/app/lib/fetchCurrency';
+import { fetchCurrencyData, ICurrency } from '@/app/lib/fetchCurrency';
 import { Container, Grid } from '@mui/material';
 import EconomyTable from '@/app/components/EconomyTable/EconomyTable';
 import CurrencyConverter from '@/app/components/converter/CurrencyConverter';
 
 export default function CurrencyPage() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState<ICurrency[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     fetchCurrencyData()

@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchHisseSenediData } from '@/app/lib/fetchHisseSenedi';
+import { fetchEmtiaData, IEmtia } from '@/app/lib/fetchEmtia';
 import { Container } from '@mui/material';
-import HisseSenedi from '@/app/components/HisseSenediTable/HisseSenediTable';
+import EmtiaTable from '@/app/components/EmtiaTable/EmtiaTable';
 
-export default function HisseSenediPage() {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function EmtiaPage() {
+  const [data, setData] = useState<IEmtia[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    fetchHisseSenediData()
+    fetchEmtiaData()
       .then((response) => setData(response.data.result))
       .catch((err) => console.error('Veri alınırken hata:', err))
       .finally(() => setLoading(false));
@@ -18,7 +18,7 @@ export default function HisseSenediPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <HisseSenedi title={'Hisse Senedi'} data={data} loading={loading} />
+      <EmtiaTable title={'Emtia'} data={data} loading={loading} />
     </Container>
   );
 }

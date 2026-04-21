@@ -8,10 +8,23 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import EconomyTableRow from '@/app/components/EconomyTable/EconomyTableRow';
+import EmtiaTableRow from '@/app/components/EmtiaTable/EmtiaTableRow';
 import SkeletonRow from '@/app/components/SkeletonRow';
 
-export default function CurrencyTable({ title, data, loading }) {
+
+export interface ITableItem {
+  code?: string;
+  name?: string;
+  [key: string]: any;
+}
+
+interface TableProps {
+  title: string;
+  data: ITableItem[];
+  loading: boolean;
+}
+
+export default function EmtiaTable({ title, data, loading }: TableProps) {
   return (
     <>
       <Typography variant="h4" gutterBottom>
@@ -31,8 +44,8 @@ export default function CurrencyTable({ title, data, loading }) {
           </TableHead>
           <TableBody>
             {loading
-              ? Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} index={5}/>)
-              : data.map((item) => <EconomyTableRow key={item.code ? item.code : item.name} item={item} />)}
+              ? Array.from({ length: 6 }).map((_, i) => <SkeletonRow key={i} index={5} />)
+              : data.map((item) => <EmtiaTableRow key={item.name} item={item} />)}
           </TableBody>
         </Table>
       </TableContainer>
