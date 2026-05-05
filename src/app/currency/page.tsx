@@ -7,7 +7,7 @@ import CurrencyConverter from '@/app/components/converter/CurrencyConverter';
 import { useCurrencyStore } from '@/store/useCurrencyStore';
 
 export default function CurrencyPage() {
-  const { data, loading, error, fetchCurrency } = useCurrencyStore();
+  const { data, isLoading, error, fetchCurrency } = useCurrencyStore();
 
   useEffect(() => {
     fetchCurrency();
@@ -28,7 +28,7 @@ export default function CurrencyPage() {
           <CurrencyConverter />
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <EconomyTable title={'Döviz Kuru'} data={data} loading={loading} />
+          <EconomyTable title={'Döviz Kuru'} data={data} loading={isLoading} />
         </Grid>
       </Grid>
     </Container>

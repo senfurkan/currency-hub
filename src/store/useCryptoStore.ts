@@ -1,30 +1,54 @@
 import { create } from 'zustand';
-import { fetchCryptoData, ICrypto } from '../app/lib/fetchCrypto';
+import type { ICrypto } from '@/app/lib/fetchCrypto';
+
+interface CryptoApiResponse {
+  success?: boolean;
+  result?: ICrypto[];
+}
 
 interface CryptoState {
   data: ICrypto[];
-  loading: boolean;
+  isLoading: boolean;
   error: string | null;
   fetchCrypto: () => Promise<void>;
+  clearError: () => void;
 }
+
+const CRYPTO_API_URL = process.env.NEXT_PUBLIC_CRYPTO_API_URL ?? '/api/crypto';
 
 export const useCryptoStore = create<CryptoState>((set, get) => ({
   data: [],
-  loading: false,
+  isLoading: false,
   error: null,
 
-  fetchCrypto: async () => {
-    if (get().loading) return; // Zaten yükleniyorsa ikinci isteği engelle (React Strict Mode koruması)
+  clearError: () => set({ error: null }),
 
-    // İstek başlamadan önce loading'i true, error'u temizliyoruz.
-    set({ loading: true, error: null });
+  fetchCrypto: async () => {
+    if (get().isLoading) return;
+
+    set({ isLoading: true, error: null });
+
     try {
-      const response = await fetchCryptoData();
-      // Veri başarılı gelirse data'ya yazıp loading'i kapatıyoruz.
-      set({ data: response.data.result, loading: false });
-    } catch (error: any) {
-      // Hata durumunda hatayı kaydedip loading'i kapatıyoruz.
-      set({ error: error.message || 'Kripto verileri alınırken bir hata oluştu', loading: false });
+      const response = await fetch(CRYPTO_API_URL, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Kripto API istegi basarisiz oldu (${response.status})`);
+      }
+
+      const payload: CryptoApiResponse = await response.json();
+
+      if (!payload.result) {
+        throw new Error('Kripto API yanit formati gecersiz.');
+      }
+
+      set({ data: payload.result, isLoading: false });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Kripto verileri alinamadi.';
+      set({ error: message, isLoading: false });
     }
   },
 }));

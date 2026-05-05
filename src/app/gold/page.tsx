@@ -6,7 +6,7 @@ import EconomyTable from '@/app/components/EconomyTable/EconomyTable';
 import { useGoldStore } from '@/store/useGoldStore';
 
 export default function GoldPage() {
-  const { data, loading, error, fetchGold } = useGoldStore();
+  const { data, isLoading, error, fetchGold } = useGoldStore();
 
   useEffect(() => {
     fetchGold();
@@ -22,7 +22,7 @@ export default function GoldPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <EconomyTable title={'Altın'} data={data} loading={loading} />
+      <EconomyTable title={'Altın'} data={data} loading={isLoading} />
     </Container>
   );
 }

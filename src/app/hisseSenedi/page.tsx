@@ -6,7 +6,7 @@ import HisseSenedi from '@/app/components/HisseSenediTable/HisseSenediTable';
 import { useHisseSenediStore } from '@/store/useHisseSenediStore';
 
 export default function HisseSenediPage() {
-  const { data, loading, error, fetchHisseSenedi } = useHisseSenediStore();
+  const { data, isLoading, error, fetchHisseSenedi } = useHisseSenediStore();
 
   useEffect(() => {
     fetchHisseSenedi();
@@ -22,7 +22,7 @@ export default function HisseSenediPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <HisseSenedi title={'Hisse Senedi'} data={data} loading={loading} />
+      <HisseSenedi title={'Hisse Senedi'} data={data} loading={isLoading} />
     </Container>
   );
 }

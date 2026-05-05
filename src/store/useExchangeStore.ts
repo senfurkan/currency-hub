@@ -1,45 +1,112 @@
 import { create } from 'zustand';
-import { fetchExchangeData } from '../app/lib/fetchExchange';
-import { fetchSymbolsData } from '../app/lib/fetchSymbols';
+
+interface ExchangeSymbol {
+  code: string;
+  name: string;
+}
+
+interface ExchangeResultItem {
+  calculated: number | string;
+  rate: number | string;
+  [key: string]: unknown;
+}
+
+interface ExchangeApiResponse {
+  success?: boolean;
+  result?: {
+    data?: ExchangeResultItem[];
+  };
+}
+
+interface SymbolsApiResponse {
+  success?: boolean;
+  result?: ExchangeSymbol[];
+}
 
 interface ExchangeState {
-  symbols: any[];
-  result: any | null;
-  loading: boolean;
+  symbols: ExchangeSymbol[];
+  result: ExchangeResultItem | null;
+  isLoading: boolean;
   error: string | null;
   fetchSymbols: () => Promise<void>;
-  fetchExchange: (int: number | string, to: string, base: string) => Promise<void>;
-  setResult: (result: any) => void;
+  fetchExchange(int: number | string, to: string, base: string): Promise<void>;
+  setResult(result: ExchangeResultItem | null): void;
+  clearError: () => void;
 }
+
+const SYMBOLS_API_URL = process.env.NEXT_PUBLIC_SYMBOLS_API_URL ?? '/api/symbols';
+const EXCHANGE_API_URL = process.env.NEXT_PUBLIC_EXCHANGE_API_URL ?? '/api/exchange';
 
 export const useExchangeStore = create<ExchangeState>((set, get) => ({
   symbols: [],
   result: null,
-  loading: false,
+  isLoading: false,
   error: null,
+
+  clearError: () => set({ error: null }),
 
   fetchSymbols: async () => {
     if (get().symbols.length > 0) return; // Sadece ilk girişte çek
 
+    set({ isLoading: true, error: null });
+
     try {
-      const response = await fetchSymbolsData();
-      if (response && !Array.isArray(response) && response.data) {
-        set({ symbols: response.data.result });
+      const response = await fetch(SYMBOLS_API_URL, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Semboller API istegi basarisiz oldu (${response.status})`);
       }
-    } catch (error: any) {
-      console.error('Semboller alınırken hata oluştu:', error);
+
+      const payload: SymbolsApiResponse = await response.json();
+
+      if (!payload.result) {
+        throw new Error('Semboller API yanit formati gecersiz.');
+      }
+
+      set({ symbols: payload.result, isLoading: false });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Semboller alinamadi.';
+      set({ error: message, isLoading: false });
     }
   },
 
-  fetchExchange: async (int, to, base) => {
-    if (get().loading) return;
+  fetchExchange: async (amount, to, base) => {
+    if (get().isLoading) return;
 
-    set({ loading: true, error: null });
+    set({ isLoading: true, error: null });
+
     try {
-      const response = await fetchExchangeData(int, to, base);
-      set({ result: response.data.result.data[0], loading: false });
-    } catch (error: any) {
-      set({ error: error.message || 'Çeviri işlemi sırasında hata oluştu', loading: false });
+      const params = new URLSearchParams({
+        int: String(amount),
+        to,
+        base,
+      });
+
+      const response = await fetch(`${EXCHANGE_API_URL}?${params.toString()}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ceviri API istegi basarisiz oldu (${response.status})`);
+      }
+
+      const payload: ExchangeApiResponse = await response.json();
+      const firstResult = payload.result?.data?.[0];
+
+      if (!firstResult) {
+        throw new Error('Ceviri sonucu bulunamadi.');
+      }
+
+      set({ result: firstResult, isLoading: false });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Ceviri islemi sirasinda hata olustu.';
+      set({ error: message, isLoading: false });
     }
   },
 

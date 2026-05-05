@@ -6,7 +6,7 @@ import BorsaIstanbulTable from '@/app/components/BorsaIstanbulTable/BorsaIstanbu
 import { useBorsaIstanbulStore } from '@/store/useBorsaIstanbulStore';
 
 export default function BorsaIstanbulPage() {
-  const { data, loading, error, fetchBorsaIstanbul } = useBorsaIstanbulStore();
+  const { data, isLoading, error, fetchBorsaIstanbul } = useBorsaIstanbulStore();
 
   useEffect(() => {
     fetchBorsaIstanbul();
@@ -22,7 +22,7 @@ export default function BorsaIstanbulPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <BorsaIstanbulTable title={'Borsa İstanbul'} data={data} loading={loading} />
+      <BorsaIstanbulTable title={'Borsa İstanbul'} data={data} loading={isLoading} />
     </Container>
   );
 }

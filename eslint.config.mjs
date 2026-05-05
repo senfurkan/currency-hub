@@ -1,12 +1,22 @@
 import js from '@eslint/js';
 import globals from 'globals';
 import pluginReact from 'eslint-plugin-react';
+import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
 import prettier from 'eslint-config-prettier';
 
 export default defineConfig([
   {
-    files: ['**/*.{js,jsx,mjs,cjs,ts,tsx}'],
+    files: ['**/*.{ts,tsx}'],
+    languageOptions: {
+      parser: tseslint.parser,
+    },
+    rules: {
+      ...tseslint.configs.recommended.rules,
+    },
+  },
+  {
+    files: ['**/*.{js,jsx,mjs,cjs}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',

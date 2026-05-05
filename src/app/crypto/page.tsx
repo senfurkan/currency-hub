@@ -6,7 +6,7 @@ import CryptoTable from '@/app/components/CryptoTable/CryptoTable';
 import { useCryptoStore } from '@/store/useCryptoStore';
 
 export default function CryptoPage() {
-  const { data, loading, error, fetchCrypto } = useCryptoStore();
+  const { data, isLoading, error, fetchCrypto } = useCryptoStore();
 
   useEffect(() => {
     fetchCrypto();
@@ -22,7 +22,7 @@ export default function CryptoPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <CryptoTable title={'Coin'} data={data} loading={loading} />
+      <CryptoTable title={'Coin'} data={data} loading={isLoading} />
     </Container>
   );
 }

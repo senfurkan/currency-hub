@@ -1,27 +1,65 @@
 import { create } from 'zustand';
-import { fetchCurrencyData, ICurrency } from '../app/lib/fetchCurrency';
+
+interface CurrencyItem {
+  code?: string;
+  currency?: string;
+  name?: string;
+  price?: number | string;
+  buying?: number | string;
+  selling?: number | string;
+  rate?: number | string;
+  time?: string;
+  text?: string;
+}
+
+interface CurrencyApiResponse {
+  success?: boolean;
+  result?: CurrencyItem[];
+}
 
 interface CurrencyState {
-  data: ICurrency[];
-  loading: boolean;
+  data: CurrencyItem[];
+  isLoading: boolean;
   error: string | null;
   fetchCurrency: () => Promise<void>;
+  clearError: () => void;
 }
+
+const CURRENCY_API_URL = process.env.NEXT_PUBLIC_CURRENCY_API_URL ?? '/api/currency';
 
 export const useCurrencyStore = create<CurrencyState>((set, get) => ({
   data: [],
-  loading: false,
+  isLoading: false,
   error: null,
 
-  fetchCurrency: async () => {
-    if (get().loading) return;
+  clearError: () => set({ error: null }),
 
-    set({ loading: true, error: null });
+  fetchCurrency: async () => {
+    if (get().isLoading) return;
+
+    set({ isLoading: true, error: null });
+
     try {
-      const response = await fetchCurrencyData();
-      set({ data: response.data.result, loading: false });
-    } catch (error: any) {
-      set({ error: error.message || 'Döviz verileri alınırken hata oluştu', loading: false });
+      const response = await fetch(CURRENCY_API_URL, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error(`Doviz API istegi basarisiz oldu (${response.status})`);
+      }
+
+      const payload: CurrencyApiResponse = await response.json();
+
+      if (!payload.result) {
+        throw new Error('Doviz API yanit formati gecersiz.');
+      }
+
+      set({ data: payload.result, isLoading: false });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : 'Doviz verileri alinamadi.';
+      set({ error: message, isLoading: false });
     }
   },
 }));

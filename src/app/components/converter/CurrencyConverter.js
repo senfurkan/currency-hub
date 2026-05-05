@@ -8,7 +8,7 @@ import SwitchButton from '@/app/components/converter/SwitchButton';
 import { useExchangeStore } from '@/store/useExchangeStore';
 
 export default function CurrencyConverter() {
-  const { symbols, result, loading, fetchSymbols, fetchExchange, setResult } = useExchangeStore();
+  const { symbols, result, isLoading, fetchSymbols, fetchExchange, setResult } = useExchangeStore();
   const [amount, setAmount] = useState('');
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
@@ -79,8 +79,8 @@ export default function CurrencyConverter() {
           <Grid size={{ xs: 12 }}>
             <ConvertButton
               onClick={handleConvert}
-              loading={loading}
-              disabled={!amount || !from || !to || loading}
+              loading={isLoading}
+              disabled={!amount || !from || !to || isLoading}
             />
           </Grid>
         </Grid>

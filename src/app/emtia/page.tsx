@@ -6,7 +6,7 @@ import EmtiaTable from '@/app/components/EmtiaTable/EmtiaTable';
 import { useEmtiaStore } from '@/store/useEmtiaStore';
 
 export default function EmtiaPage() {
-  const { data, loading, error, fetchEmtia } = useEmtiaStore();
+  const { data, isLoading, error, fetchEmtia } = useEmtiaStore();
 
   useEffect(() => {
     fetchEmtia();
@@ -22,7 +22,7 @@ export default function EmtiaPage() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4 }}>
-      <EmtiaTable title={'Emtia'} data={data} loading={loading} />
+      <EmtiaTable title={'Emtia'} data={data} loading={isLoading} />
     </Container>
   );
 }
