@@ -1,22 +1,10 @@
 import { create } from 'zustand';
-import type { ICrypto } from '@/app/lib/fetchCrypto';
-
-interface CryptoApiResponse {
-  success?: boolean;
-  result?: ICrypto[];
-}
-
-interface CryptoState {
-  data: ICrypto[];
-  isLoading: boolean;
-  error: string | null;
-  fetchCrypto: () => Promise<void>;
-  clearError: () => void;
-}
+import type { CryptoApiResponse } from '@/types/market';
+import type { CryptoStoreState } from '@/types/store';
 
 const CRYPTO_API_URL = process.env.NEXT_PUBLIC_CRYPTO_API_URL ?? '/api/crypto';
 
-export const useCryptoStore = create<CryptoState>((set, get) => ({
+export const useCryptoStore = create<CryptoStoreState>((set, get) => ({
   data: [],
   isLoading: false,
   error: null,

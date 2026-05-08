@@ -1,33 +1,10 @@
 import { create } from 'zustand';
-
-interface EmtiaItem {
-  code?: string;
-  currency?: string;
-  name?: string;
-  price?: number | string;
-  buying?: number | string;
-  selling?: number | string;
-  rate?: number | string;
-  time?: string;
-  text?: string;
-}
-
-interface EmtiaApiResponse {
-  success?: boolean;
-  result?: EmtiaItem[];
-}
-
-interface EmtiaState {
-  data: EmtiaItem[];
-  isLoading: boolean;
-  error: string | null;
-  fetchEmtia: () => Promise<void>;
-  clearError: () => void;
-}
+import type { MarketApiResponse } from '@/types/market';
+import type { EmtiaStoreState } from '@/types/store';
 
 const EMTIA_API_URL = process.env.NEXT_PUBLIC_EMTIA_API_URL ?? '/api/emtia';
 
-export const useEmtiaStore = create<EmtiaState>((set, get) => ({
+export const useEmtiaStore = create<EmtiaStoreState>((set, get) => ({
   data: [],
   isLoading: false,
   error: null,
@@ -50,7 +27,7 @@ export const useEmtiaStore = create<EmtiaState>((set, get) => ({
         throw new Error(`Emtia API istegi basarisiz oldu (${response.status})`);
       }
 
-      const payload: EmtiaApiResponse = await response.json();
+      const payload: MarketApiResponse = await response.json();
 
       if (!payload.result) {
         throw new Error('Emtia API yanit formati gecersiz.');

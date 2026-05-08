@@ -1,22 +1,7 @@
 import axios from 'axios';
+import type { ExchangeApiResponse } from '@/types/market';
 
-export interface IExchange {
-  code?: string;
-  currency?: string;
-  name?: string;
-  price?: number | string;
-  buying?: number | string;
-  selling?: number | string;
-  rate?: number | string;
-  time?: string;
-  text?: string;
-  [key: string]: any;
-}
-
-export interface IExchangeResponse {
-  success: boolean;
-  result: IExchange[];
-}
+export type IExchangeResponse = ExchangeApiResponse;
 
 
 export async function fetchExchangeData(int: string | number, to: string, base: string) {

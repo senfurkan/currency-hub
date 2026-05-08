@@ -10,17 +10,11 @@ import {
 } from '@mui/material';
 import HisseSenediTableRow from '@/app/components/HisseSenediTable/HisseSenediTableRow';
 import SkeletonRow from '@/app/components/SkeletonRow';
-
-
-export interface ITableItem {
-  code?: string;
-  name?: string;
-  [key: string]: any;
-}
+import type { MarketItem } from '@/types/market';
 
 interface TableProps {
   title: string;
-  data: ITableItem[];
+  data: MarketItem[];
   loading: boolean;
 }
 

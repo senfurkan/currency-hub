@@ -1,24 +1,8 @@
 import axios from 'axios';
+import type { MarketApiResponse, MarketItem } from '@/types/market';
 
-export interface IBorsaIstanbul {
-  code?: string;
-  currency?: string;
-  name?: string;
-  price?: number | string;
-  buying?: number | string;
-  selling?: number | string;
-  rate?: number | string;
-  time?: string;
-  text?: string;
-  [key: string]: any;
-}
-
-export interface IBorsaIstanbulResponse {
-  success: boolean;
-  result: IBorsaIstanbul[];
-}
-
-import axiosInstance from './axiosInstance';
+export type IBorsaIstanbul = MarketItem;
+export type IBorsaIstanbulResponse = MarketApiResponse;
 
 export async function fetchBorsaIstanbulData() {
   try {

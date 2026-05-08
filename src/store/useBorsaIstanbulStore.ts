@@ -1,33 +1,10 @@
 import { create } from 'zustand';
-
-interface BorsaIstanbulItem {
-  code?: string;
-  currency?: string;
-  name?: string;
-  price?: number | string;
-  buying?: number | string;
-  selling?: number | string;
-  rate?: number | string;
-  time?: string;
-  text?: string;
-}
-
-interface BorsaIstanbulApiResponse {
-  success?: boolean;
-  result?: BorsaIstanbulItem[];
-}
-
-interface BorsaIstanbulState {
-  data: BorsaIstanbulItem[];
-  isLoading: boolean;
-  error: string | null;
-  fetchBorsaIstanbul: () => Promise<void>;
-  clearError: () => void;
-}
+import type { MarketApiResponse } from '@/types/market';
+import type { BorsaIstanbulStoreState } from '@/types/store';
 
 const BORSA_ISTANBUL_API_URL = process.env.NEXT_PUBLIC_BORSA_ISTANBUL_API_URL ?? '/api/borsaIstanbul';
 
-export const useBorsaIstanbulStore = create<BorsaIstanbulState>((set, get) => ({
+export const useBorsaIstanbulStore = create<BorsaIstanbulStoreState>((set, get) => ({
   data: [],
   isLoading: false,
   error: null,
@@ -50,7 +27,7 @@ export const useBorsaIstanbulStore = create<BorsaIstanbulState>((set, get) => ({
         throw new Error(`Borsa Istanbul API istegi basarisiz oldu (${response.status})`);
       }
 
-      const payload: BorsaIstanbulApiResponse = await response.json();
+      const payload: MarketApiResponse = await response.json();
 
       if (!payload.result) {
         throw new Error('Borsa Istanbul API yanit formati gecersiz.');

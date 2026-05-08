@@ -1,18 +1,8 @@
 import axios from 'axios';
+import type { CryptoApiResponse, CryptoItem } from '@/types/market';
 
-export interface ICrypto {
-  code?: string;
-  currency?: string;
-  name: string;
-  price: number | string;
-  pricestr?: string;
-  changeRate?: number | string;
-}
-
-export interface ICryptoResponse {
-  success: boolean;
-  result: ICrypto[];
-}
+export type ICrypto = CryptoItem;
+export type ICryptoResponse = CryptoApiResponse;
 
 export async function fetchCryptoData() {
   try {

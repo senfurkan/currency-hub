@@ -1,43 +1,14 @@
 import { create } from 'zustand';
-
-interface ExchangeSymbol {
-  code: string;
-  name: string;
-}
-
-interface ExchangeResultItem {
-  calculated: number | string;
-  rate: number | string;
-  [key: string]: unknown;
-}
-
-interface ExchangeApiResponse {
-  success?: boolean;
-  result?: {
-    data?: ExchangeResultItem[];
-  };
-}
-
-interface SymbolsApiResponse {
-  success?: boolean;
-  result?: ExchangeSymbol[];
-}
-
-interface ExchangeState {
-  symbols: ExchangeSymbol[];
-  result: ExchangeResultItem | null;
-  isLoading: boolean;
-  error: string | null;
-  fetchSymbols: () => Promise<void>;
-  fetchExchange(int: number | string, to: string, base: string): Promise<void>;
-  setResult(result: ExchangeResultItem | null): void;
-  clearError: () => void;
-}
+import type {
+  ExchangeApiResponse,
+  SymbolsApiResponse,
+} from '@/types/market';
+import type { ExchangeStoreState } from '@/types/store';
 
 const SYMBOLS_API_URL = process.env.NEXT_PUBLIC_SYMBOLS_API_URL ?? '/api/symbols';
 const EXCHANGE_API_URL = process.env.NEXT_PUBLIC_EXCHANGE_API_URL ?? '/api/exchange';
 
-export const useExchangeStore = create<ExchangeState>((set, get) => ({
+export const useExchangeStore = create<ExchangeStoreState>((set, get) => ({
   symbols: [],
   result: null,
   isLoading: false,

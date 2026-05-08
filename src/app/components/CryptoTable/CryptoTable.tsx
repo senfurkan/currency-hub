@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 import CryptoTableRow from '@/app/components/CryptoTable/CryptoTableRow';
 import SkeletonRow from '@/app/components/SkeletonRow';
-import { ICrypto } from '@/app/lib/fetchCrypto';
+import type { CryptoItem } from '@/types/market';
 
 interface CryptoTableProps {
   title: string;
-  data: ICrypto[];
+  data: CryptoItem[];
   loading: boolean;
 }
 
