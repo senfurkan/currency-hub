@@ -1,6 +1,10 @@
 import { TableRow, TableCell, Skeleton } from '@mui/material';
 
-export default function CurrencySkeletonRow({index}) {
+interface CurrencySkeletonRowProps {
+  index: number;
+}
+
+export default function CurrencySkeletonRow({ index }: CurrencySkeletonRowProps) {
   return (
     <TableRow>
       {Array.from({ length: index }).map((_, idx) => (

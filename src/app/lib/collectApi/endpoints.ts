@@ -1,4 +1,3 @@
-// lib/collectApi/endpoints.js
 export const COLLECT_API_ENDPOINTS = {
   allCurrency: 'allCurrency',
   goldPrice: 'goldPrice',
@@ -8,4 +7,7 @@ export const COLLECT_API_ENDPOINTS = {
   crypto: 'cripto',
   symbols: 'symbols',
   exchange: 'exchange',
-};
+} as const;
+
+export type CollectApiEndpointKey = keyof typeof COLLECT_API_ENDPOINTS;
+export type CollectApiEndpoint = (typeof COLLECT_API_ENDPOINTS)[CollectApiEndpointKey];

@@ -1,7 +1,11 @@
 import { IconButton } from '@mui/material';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 
-export default function SwitchButton({ onClick }) {
+interface SwitchButtonProps {
+  onClick: () => void;
+}
+
+export default function SwitchButton({ onClick }: SwitchButtonProps) {
   return (
     <IconButton onClick={onClick}>
       <SwapHorizIcon />

@@ -1,6 +1,17 @@
+import { memo } from 'react';
 import { TableRow, TableCell } from '@mui/material';
+import type { MarketItem } from '@/types/market';
 
-export default function CurrencyTableRow({ item }) {
+interface EconomyRowItem extends MarketItem {
+  buyingstr?: string | number;
+  sellingstr?: string | number;
+}
+
+interface CurrencyTableRowProps {
+  item: EconomyRowItem;
+}
+
+function CurrencyTableRow({ item }: CurrencyTableRowProps) {
   return (
     <TableRow
       sx={(theme) => ({
@@ -15,7 +26,7 @@ export default function CurrencyTableRow({ item }) {
       <TableCell
         align="right"
         sx={{
-          color: parseFloat(item.rate) > 0 ? 'green' : 'red',
+          color: Number.parseFloat(String(item.rate ?? 0)) > 0 ? 'green' : 'red',
           fontWeight: 500,
         }}
       >
@@ -25,3 +36,5 @@ export default function CurrencyTableRow({ item }) {
     </TableRow>
   );
 }
+
+export default memo(CurrencyTableRow);

@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import type { ChangeEvent } from 'react';
 import { Box, Grid, TextField, Typography, Paper, InputAdornment } from '@mui/material';
 import CurrencySelect from '@/app/components/converter/CurrencySelect';
 import ConvertButton from '@/app/components/converter/ConvertButton';
 import SwitchButton from '@/app/components/converter/SwitchButton';
 import { useExchangeStore } from '@/store/useExchangeStore';
 
-export default function CurrencyConverter() {
+export default function CurrencyConverterView() {
   const { symbols, result, isLoading, fetchSymbols, fetchExchange, setResult } = useExchangeStore();
   const [amount, setAmount] = useState('');
   const [from, setFrom] = useState('');
@@ -17,29 +18,55 @@ export default function CurrencyConverter() {
     fetchSymbols();
   }, [fetchSymbols]);
 
-  const handleSwitch = () => {
+  const handleSwitch = useCallback(() => {
     setFrom(to);
     setTo(from);
     setResult(null);
-  };
+  }, [from, to, setResult]);
 
-  const handleConvert = () => {
+  const handleConvert = useCallback(() => {
     fetchExchange(amount, to, from);
-  };
+  }, [amount, to, from, fetchExchange]);
+
+  const handleFromChange = useCallback((event: { target: { value: string } }) => {
+    setFrom(event.target.value);
+  }, []);
+
+  const handleToChange = useCallback((event: { target: { value: string } }) => {
+    setTo(event.target.value);
+  }, []);
+
+  const handleAmountChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    if (value === '' || Number.parseFloat(value) > 0) {
+      setAmount(value);
+    }
+  }, []);
+
+  const conversionResult = useMemo(() => {
+    if (!result || !amount || !from || !to) return null;
+
+    return {
+      calculatedText: `${amount} ${from} ≈ ${result.calculated} ${to}`,
+      rateText: `1 ${from} = ${result.rate} ${to}`,
+    };
+  }, [result, amount, from, to]);
+
+  const isConvertDisabled = useMemo(() => !amount || !from || !to || isLoading, [amount, from, to, isLoading]);
 
   return (
     <Box>
       <Typography variant="h4" gutterBottom>
-        Döviz Dönüştürücü
+        Doviz Donusturucu
       </Typography>
 
       <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
         <Grid container spacing={2} rowSpacing={1.5} alignItems="center" justifyContent="center">
           <Grid size={{ xs: 12, sm: 5.5 }}>
             <CurrencySelect
-              label="Mevcut Döviz Cinsi"
+              label="Mevcut Doviz Cinsi"
               value={from}
-              onChange={(e) => setFrom(e.target.value)}
+              onChange={handleFromChange}
               options={symbols}
             />
           </Grid>
@@ -50,9 +77,9 @@ export default function CurrencyConverter() {
 
           <Grid size={{ xs: 12, sm: 5.5 }}>
             <CurrencySelect
-              label="Çevrilecek Döviz"
+              label="Cevrilecek Doviz"
               value={to}
-              onChange={(e) => setTo(e.target.value)}
+              onChange={handleToChange}
               options={symbols}
             />
           </Grid>
@@ -62,12 +89,7 @@ export default function CurrencyConverter() {
               label="Tutar"
               type="number"
               value={amount}
-              onChange={(e) => {
-                const value = e.target.value;
-                if (parseFloat(value) > 0 || value === '') {
-                  setAmount(value);
-                }
-              }}
+              onChange={handleAmountChange}
               fullWidth
               required
               InputProps={{
@@ -77,22 +99,18 @@ export default function CurrencyConverter() {
           </Grid>
 
           <Grid size={{ xs: 12 }}>
-            <ConvertButton
-              onClick={handleConvert}
-              loading={isLoading}
-              disabled={!amount || !from || !to || isLoading}
-            />
+            <ConvertButton onClick={handleConvert} loading={isLoading} disabled={isConvertDisabled} />
           </Grid>
         </Grid>
       </Paper>
 
-      {result && amount && from && to && (
+      {conversionResult && (
         <Paper elevation={2} sx={{ mt: 4, p: 3, borderRadius: 2, textAlign: 'center' }}>
           <Typography variant="h6" gutterBottom>
-            {amount} {from} ≈ {result.calculated} {to}
+            {conversionResult.calculatedText}
           </Typography>
           <Typography variant="h6" gutterBottom>
-            1 {from} = {result.rate} {to}
+            {conversionResult.rateText}
           </Typography>
         </Paper>
       )}

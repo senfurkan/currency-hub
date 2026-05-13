@@ -6,7 +6,7 @@ export async function GET() {
   const data = await collectApiRequest(COLLECT_API_ENDPOINTS.borsaIstanbul);
 
   if (!data) {
-    return NextResponse.json({ error: 'Veri alınamadı' }, { status: 500 });
+    return NextResponse.json({ error: 'Veri alinamadi' }, { status: 500 });
   }
 
   return NextResponse.json(data);

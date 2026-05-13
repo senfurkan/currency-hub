@@ -4,8 +4,8 @@ export async function fetchSymbolsData() {
   try {
     const response = await axios.get('api/symbols');
     return response;
-  } catch (error) {
-    console.error('Sembol verileri alınamadı:', error);
+  } catch (error: unknown) {
+    console.error('Sembol verileri alinamadi:', error);
     return [];
   }
 }

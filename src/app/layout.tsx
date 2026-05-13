@@ -1,14 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import { ThemeProvider, CssBaseline, Container } from '@mui/material';
 import { lightTheme, darkTheme } from '@/app/theme';
 import Header from '@/app/components/Header';
 
-export default function RootLayout({ children }) {
+interface RootLayoutProps {
+  children: ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   const [darkMode, setDarkMode] = useState(false);
 
-  // Optional: remember preference with localStorage
   useEffect(() => {
     const stored = localStorage.getItem('darkMode');
     if (stored) setDarkMode(stored === 'true');
@@ -17,7 +21,7 @@ export default function RootLayout({ children }) {
   const toggleDarkMode = () => {
     setDarkMode((prev) => {
       const updated = !prev;
-      localStorage.setItem('darkMode', updated);
+      localStorage.setItem('darkMode', String(updated));
       return updated;
     });
   };

@@ -1,7 +1,7 @@
 'use client';
 
 import { Container } from '@mui/material';
-import CurrencyConverter from '@/app/components/converter/CurrencyConverter';
+import CurrencyConverter from '@/app/components/converter/CurrencyConverterView';
 
 export default function ExchangePage() {
   return (

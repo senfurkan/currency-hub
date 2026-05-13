@@ -1,10 +1,29 @@
 'use client';
 
-import { useEffect } from 'react';
-import { Container, Grid, Typography } from '@mui/material';
-import EconomyTable from '@/app/components/EconomyTable/EconomyTable';
-import CurrencyConverter from '@/app/components/converter/CurrencyConverter';
+import { lazy, Suspense, useEffect } from 'react';
+import { Box, Container, Grid, Skeleton, Typography } from '@mui/material';
 import { useCurrencyStore } from '@/store/useCurrencyStore';
+
+const CurrencyConverterSection = lazy(() => import('@/app/components/converter/CurrencyConverterView'));
+const EconomyTableSection = lazy(() => import('@/app/components/EconomyTable/EconomyTable'));
+
+function ConverterFallback() {
+  return (
+    <Box>
+      <Skeleton variant="text" width={220} height={48} sx={{ mb: 1 }} />
+      <Skeleton variant="rounded" height={280} />
+    </Box>
+  );
+}
+
+function TableFallback() {
+  return (
+    <Box>
+      <Skeleton variant="text" width={180} height={48} sx={{ mb: 1 }} />
+      <Skeleton variant="rounded" height={420} />
+    </Box>
+  );
+}
 
 export default function CurrencyPage() {
   const { data, isLoading, error, fetchCurrency } = useCurrencyStore();
@@ -25,10 +44,14 @@ export default function CurrencyPage() {
     <Container maxWidth="lg">
       <Grid container rowSpacing={4}>
         <Grid size={{ xs: 12 }}>
-          <CurrencyConverter />
+          <Suspense fallback={<ConverterFallback />}>
+            <CurrencyConverterSection />
+          </Suspense>
         </Grid>
         <Grid size={{ xs: 12 }}>
-          <EconomyTable title={'Döviz Kuru'} data={data} loading={isLoading} />
+          <Suspense fallback={<TableFallback />}>
+            <EconomyTableSection title={'Döviz Kuru'} data={data} loading={isLoading} />
+          </Suspense>
         </Grid>
       </Grid>
     </Container>
